@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>V-Repository</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Roboto:100,300,400,500,700|Philosopher:400,400i,700,700i" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='aos/aos.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='owl.carousel/assets/owl.carousel.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modal-video/css/modal-video.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+
+  <style>
+    body::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    body::-webkit-scrollbar-thumb {
+        background: rgba(250, 250, 250, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+        <h1><a href="{{ url_for('index') }}"><span>V</span>-Repository</a></h1>
+      </div>
+
+      <nav class="pull-right">
+        <ul class="nav-menu">
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('signup') }}">Signup</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+    <div class="hero-container" data-aos="fade-in">
+      <h1>Welcome to V-Repository</h1>
+      <h2> Upload Certificates <br> (FDP, Online Courses, Seminar, Webinar &amp; more...)</h2>
+      <img src="{{ url_for('static', filename='hero-img.png') }}" alt="Hero Imgs">
+      
+  </section><!-- End Hero Section -->
+
+  <!-- ======= Footer ======= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-md-12 col-lg-12">
+          <div class="footer-logo">
+
+            <a class="navbar-brand" href="#">V-Repository</a>
+            <p>A repository where you can add your various certificates to the repository and download it from anytime anywhere :)</p>
+          </div>
+        </div>
+      </div>
+      
+      <li class="divider text-center"></li>
+      
+      <div class="row">
+
+        <div class="container text-center" style="color: white;">
+          <div class="credits pb-4" id="credits">
+
+            Designed by <a style="text-decoration: none; color: #71c55d;" target="_blank" href="https://github.com/sohamsahare123">Soham Sahare</a>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+  </footer><!-- End  Footer -->
+
+  <script type = "text/javascript" src = "{{ url_for('static', filename = 'jquery/jquery.min.js') }}" ></script>
+  <script type = "text/javascript" src = "{{ url_for('static', filename = 'aos/aos.js') }}" ></script>
+  <script type = "text/javascript" src = "{{ url_for('static', filename = 'modal-video/js/modal-video.min.js') }}" ></script>
+  <script type = "text/javascript" src = "{{ url_for('static', filename = 'owl.carousel/owl.carousel.min.js') }}" ></script>
+  <script type = "text/javascript" src = "{{ url_for('static', filename = 'superfish/superfish.min.js') }}" ></script>
+  <script type = "text/javascript" src = "{{ url_for('static', filename = 'main.js') }}" ></script>
+
+</body>
+
+</html>
