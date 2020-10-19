@@ -150,10 +150,8 @@ def download():
 
             file_data = Uploads.query.filter_by(ids = userid, name = name, title = title, source = source).first()
 
-            try:
-                return  send_file(BytesIO(file_data.data), attachment_filename = "{}_{}_{}.pdf".format(title, source, name), as_attachment = True)
-            except:
-                return "snaidn"
+            return  send_file(BytesIO(file_data.data), attachment_filename = "{}_{}_{}.pdf".format(title, source, name), as_attachment = True)
+            
         except:
             return "NO"
 
@@ -163,6 +161,23 @@ def download():
     user_name = user.username
 
     return render_template("download.html", form = download, username = user_name)
+
+@app.route("/download/<name>/<title>/<source>")
+def download_url(name, title, source):
+
+    download = Download()
+
+    if not current_user.is_authenticated:
+
+        flash("Please Login", 'danger')
+        return redirect(url_for('login'))
+
+    userid = current_user.get_id()
+
+    file_data = Uploads.query.filter_by(ids = userid, name = name, title = title, source = source).first()
+
+    return  send_file(BytesIO(file_data.data), attachment_filename = "{}_{}_{}.pdf".format(title, source, name), as_attachment = True)
+    
 
 @app.route("/reset", methods = ['GET', 'POST'])
 def reset():
@@ -242,7 +257,6 @@ def forgot():
 @app.route("/all_certificates", methods = ["GET", "POST"])
 def all_certificates():
 
-
     if not current_user.is_authenticated:
 
         flash("Please Login", 'danger')
@@ -258,7 +272,7 @@ def all_certificates():
     user_name = user.username
 
     return render_template("all_certificates.html", certificates = all_certs, username = user_name)
-
+    
 if __name__ == "__main__":
 
     app.run(debug = True)

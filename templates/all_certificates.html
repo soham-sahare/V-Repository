@@ -59,7 +59,7 @@
           <li><a href="{{ url_for('download') }}">Download Certificates</a></li>
           <li><a href="{{ url_for('reset') }}">Reset Password</a></li>
           <li class="menu-active"><a href="{{ url_for('all_certificates') }}">My Certificates</a></li>
-          <li><a href="{{ url_for('logout') }}">Logout &nbsp;&nbsp;{{ username }}</a></li>
+          <li><a href="{{ url_for('logout') }}">Logout &nbsp;{{ username }}</a></li>
         </ul>
       </nav><!-- #nav-menu-container -->
     </div>
@@ -83,6 +83,7 @@
                       <th scope="col">Source</th>
                       <th scope="col">Duration</th>
                       <th scope="col">Year</th>
+                      <th scope="col">Download</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -96,6 +97,7 @@
                       <td>{{ i.source }}</td>
                       <td>{{ i.duration }}</td>
                       <td>{{ i.year }}</td>
+                      <td><a href="download/{{ i.name }}/{{ i.title }}/{{ i.source }}">Download</a></td>
                     </tr>
                   {%endfor%} 
                   </tbody>
