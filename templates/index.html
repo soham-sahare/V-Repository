@@ -51,6 +51,22 @@
   <header id="header" class="header">
     <div class="container">
 
+      <div class="d-flex justify-content-center">
+        {% block content %}
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, msg in messages %}
+                {% if category == 'success' %}
+                  <h6 class="text-success">{{ msg }}</h6> &nbsp;
+                {% else %}
+                  <h6 class="text-danger">{{ msg }}</h6> &nbsp;
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        {% endblock %}
+      </div>
+
       <div id="logo" class="pull-left">
         <h1><a href="{{ url_for('index') }}"><span>V</span>-Repository</a></h1>
       </div>
@@ -119,7 +135,10 @@
                                {{ form.submit }}
                             </div>
 
-                            {{ form.csrf_token }}
+                            <div class="form-group" style="display: none;">
+                                {{ form.csrf_token }}
+                            </div>
+
                         </form>
                     </div>
                 </div>

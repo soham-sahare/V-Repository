@@ -49,6 +49,22 @@
   <header id="header" class="header">
     <div class="container">
 
+      <div class="d-flex justify-content-center">
+        {% block content %}
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, msg in messages %}
+                {% if category == 'success' %}
+                  <h6 class="text-success">{{ msg }}</h6> &nbsp;
+                {% else %}
+                  <h6 class="text-danger">{{ msg }}</h6> &nbsp;
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        {% endblock %}
+      </div>
+
       <div id="logo" class="pull-left">
         <h1><a href="{{ url_for('index') }}"><span>V</span>-Repository</a></h1>
       </div>
@@ -114,31 +130,6 @@
   <script type = "text/javascript" src = "{{ url_for('static', filename = 'owl.carousel/owl.carousel.min.js') }}" ></script>
   <script type = "text/javascript" src = "{{ url_for('static', filename = 'superfish/superfish.min.js') }}" ></script>
   <script type = "text/javascript" src = "{{ url_for('static', filename = 'main.js') }}" ></script>
-
-  <script>
-        document.getElementById("upload_btn").onclick = () => {
-            document.querySelector("input[type=file]").click()
-        }
-
-        document.querySelector("input[type=file]").onchange = () => {
-            var path = document.querySelector("input[type=file]").value
-            var filename = path.replace(/^.*[\\\/]/, '')
-            document.getElementById("chosen").innerHTML = ""
-            document.getElementById("chosen").innerHTML = filename
-        }
-
-        document.getElementById("download").onclick = () => {
-            document.getElementById("down_btn").click()
-        }
-
-        document.getElementById("logout").onclick = () => {
-            document.getElementById("out_btn").click()
-        }
-
-        document.getElementById("change").onclick = () => {
-            document.getElementById("chnage_btn").click()
-        }
-    </script>
 
 </body>
 

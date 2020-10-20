@@ -70,6 +70,7 @@ def login():
         user_object = User.query.filter_by(username = login_form.username.data).first()
         login_user(user_object)
 
+        flash("Login Successfull!!", 'success')
         return redirect(url_for('index'))
 
     return render_template("login.html", form = login_form)
@@ -79,7 +80,7 @@ def logout():
 
     if not current_user.is_authenticated:
 
-        flash("Please Login", 'danger')
+        flash("Please Login!!", 'danger')
         return redirect(url_for('login'))
 
     logout_user()
@@ -91,16 +92,22 @@ def logout():
 #@login_required
 def index():
 
-    up = Uploaddata()
-
     if not current_user.is_authenticated:
 
-        flash("Please Login", 'danger')
+        flash("Please Login!!", 'danger')
         return redirect(url_for('login'))
+
+    up = Uploaddata()
+    userid = current_user.get_id()
+    user = User.query.filter_by(id = userid).first()
+    user_name = user.username
 
     if up.validate_on_submit():
 
         userid = current_user.get_id()
+
+        user = User.query.filter_by(id = userid).first()
+        user_name = user.username
 
         ids = userid
         name = up.name.data
@@ -115,28 +122,35 @@ def index():
 
         send_mail_certificate(TO, EMAIL_ADDRESS, EMAIL_PASSWORD, name, title, source, duration, year)
 
-        loads = Uploads(ids = ids, name = name, title = title, source = source, duration = duration, year = year, data = files.read())
-        db.session.add(loads)
-        db.session.commit()
+        try:
 
-        return "Added Successfully"
+            loads = Uploads(ids = ids, name = name, title = title, source = source, duration = duration, year = year, data = files.read())
+            db.session.add(loads)
+            db.session.commit()
 
-    userid = current_user.get_id()
+            flash("Your certificate was uploaded successfully!!", 'success')
+            return render_template("index.html", form = up, username = user_name)
 
-    user = User.query.filter_by(id = userid).first()
-    user_name = user.username
+        except:
+
+            flash("Your certificate was not uploaded!!", 'danger')
+            return render_template("index.html", form = up, username = user_name)
 
     return render_template("index.html", form = up, username = user_name)
     
 @app.route("/download", methods = ['GET', 'POST'])
 def download():
 
-    download = Download()
-
     if not current_user.is_authenticated:
 
-        flash("Please Login", 'danger')
+        flash("Please Login!!", 'danger')
         return redirect(url_for('login'))
+
+    download = Download()
+
+    userid = current_user.get_id()
+    user = User.query.filter_by(id = userid).first()
+    user_name = user.username
 
     if download.validate_on_submit():
 
@@ -150,44 +164,57 @@ def download():
 
             file_data = Uploads.query.filter_by(ids = userid, name = name, title = title, source = source).first()
 
+            flash("Download Successfull!!", 'success')
+
             return  send_file(BytesIO(file_data.data), attachment_filename = "{}_{}_{}.pdf".format(title, source, name), as_attachment = True)
             
         except:
-            return "NO"
 
-    userid = current_user.get_id()
-
-    user = User.query.filter_by(id = userid).first()
-    user_name = user.username
+            flash("Download Unsuccessfull!!", 'danger')
+            return render_template("download.html", form = download, username = username)
 
     return render_template("download.html", form = download, username = user_name)
 
 @app.route("/download/<name>/<title>/<source>")
 def download_url(name, title, source):
 
-    download = Download()
-
     if not current_user.is_authenticated:
 
-        flash("Please Login", 'danger')
+        flash("Please Login!!", 'danger')
         return redirect(url_for('login'))
 
+    download = Download()
+
     userid = current_user.get_id()
+    all_certs = Uploads.query.filter_by(ids = userid).all()
 
-    file_data = Uploads.query.filter_by(ids = userid, name = name, title = title, source = source).first()
+    user = User.query.filter_by(id = userid).first()
+    user_name = user.username
 
-    return  send_file(BytesIO(file_data.data), attachment_filename = "{}_{}_{}.pdf".format(title, source, name), as_attachment = True)
-    
+    try:
+
+        file_data = Uploads.query.filter_by(ids = userid, name = name, title = title, source = source).first()
+
+        return  send_file(BytesIO(file_data.data), attachment_filename = "{}_{}_{}.pdf".format(title, source, name), as_attachment = True)
+    except:
+
+        flash("Download Unsuccessfull!!", 'danger')
+
+        return render_template("all_certificates.html", certificates = all_certs, username = user_name)
 
 @app.route("/reset", methods = ['GET', 'POST'])
 def reset():
 
-    reset_pass = change_pass()
-
     if not current_user.is_authenticated:
 
-        flash("Please Login", 'danger')
+        flash("Please Login!!", 'danger')
         return redirect(url_for('login'))
+
+    reset_pass = change_pass()
+    userid = current_user.get_id()
+
+    user = User.query.filter_by(id = userid).first()
+    user_name = user.username
 
     if reset_pass.validate_on_submit():
 
@@ -198,23 +225,24 @@ def reset():
 
         hashed_password = pbkdf2_sha256.hash(confirm_password)
 
-        db.session.query(User).filter(User.id == userid).update({User.password: hashed_password}, synchronize_session=False)
-        db.session.commit()
+        try:
 
-        user = User.query.filter_by(id = userid).first()
+            db.session.query(User).filter(User.id == userid).update({User.password: hashed_password}, synchronize_session=False)
+            db.session.commit()
 
-        TO = user.email
+            user = User.query.filter_by(id = userid).first()
 
-        send_mail_danger(TO, EMAIL_ADDRESS, EMAIL_PASSWORD)
+            TO = user.email
 
-        logout()
+            send_mail_danger(TO, EMAIL_ADDRESS, EMAIL_PASSWORD)
 
-        return "Successfull"
+            flash("Password Change Successfull!!", "success")
+            return redirect(url_for("logout"))
 
-    userid = current_user.get_id()
+        except:
 
-    user = User.query.filter_by(id = userid).first()
-    user_name = user.username
+            flash("Password Change Unsuccessfull!!", "danger")
+            return render_template("reset.html", form = reset_pass, username = user_name)
 
     return render_template("reset.html", form = reset_pass, username = user_name)
 
@@ -222,6 +250,7 @@ def reset():
 def forgot():
 
     forgot_pass = forgot_password()
+    login_form = LoginForm()
 
     if forgot_pass.validate_on_submit():
 
@@ -248,19 +277,22 @@ def forgot():
 
             send_mail(TO, EMAIL_ADDRESS, EMAIL_PASSWORD, username, password)
 
-            return "CHANGED"
+            flash("Temporary Password has been sent to your registered email", "success")
+
+            return render_template("login.html", form = login_form)
         else:
-            return "NO Registerd email found"
+            flash("This email is not registered", "danger")
+            return render_template("forgot_password.html", form = forgot_pass)
 
     return render_template("forgot_password.html", form = forgot_pass)
 
 @app.route("/all_certificates", methods = ["GET", "POST"])
 def all_certificates():
 
-    if not current_user.is_authenticated:
+    # if not current_user.is_authenticated:
 
-        flash("Please Login", 'danger')
-        return redirect(url_for('login'))
+    #     flash("Please Login", 'danger')
+    #     return redirect(url_for('login'))
 
     userid = current_user.get_id()
 

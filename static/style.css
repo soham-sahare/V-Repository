@@ -13,6 +13,16 @@ h2 {
   font-weight: 600;
 }
 
+*{
+  list-style: none;
+}
+
+li *{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
 .form-group *{
   list-style: none;
 }
@@ -49,6 +59,11 @@ h5 {
   color: #626262;
   font-size: 14px;
   font-weight: 500;
+}
+
+h6 {
+  color: #626262;
+  font-weight: 700;
 }
 
 a {

@@ -19,9 +19,16 @@ def invalid(form, field):
     elif not pbkdf2_sha256.verify(password, user_data.password):
         raise ValidationError("Username or password is incorrect")
 
+def validate_email(form, field):
+
+        user_object = User.query.filter_by(username = form.email.data).first()
+        
+        if user_object:
+            raise ValidationError("Email already exists")
+
 class Registration(FlaskForm):
 
-    email = EmailField('email_label', validators = [InputRequired("Email Required")])
+    email = EmailField('email_label', validators = [InputRequired("Email Required"), validate_email])
     username = StringField('username_label', validators = [InputRequired("Username Required"), Length(min = 5, max = 20, message = "Username must be between 5 to 20 characters")])
     password = PasswordField('password_label', validators = [InputRequired("Password Required"), Length(min = 5, max = 20, message = "Password must be between 5 to 20 characters")])
     confirm_password = PasswordField('confirm_password_label', validators = [InputRequired("Password Required"), EqualTo('password', message = "Password must match")])
@@ -32,13 +39,6 @@ class Registration(FlaskForm):
         user_object = User.query.filter_by(username = username.data).first()
         if user_object:
             raise ValidationError("Username already exists")
-
-    def validate_email(self, email):
-
-        user_object = User.query.filter_by(username = email.data).first()
-        if user_object:
-            raise ValidationError("Email already exists")
-
 
 class LoginForm(FlaskForm):
     

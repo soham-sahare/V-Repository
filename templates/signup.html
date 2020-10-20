@@ -39,6 +39,22 @@
   <header id="header" class="header">
     <div class="container">
 
+      <div class="d-flex justify-content-center">
+        {% block content %}
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, msg in messages %}
+                {% if category == 'success' %}
+                  <h6 class="text-success">{{ msg }}</h6> &nbsp;
+                {% else %}
+                  <h6 class="text-danger">{{ msg }}</h6> &nbsp;
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        {% endblock %}
+      </div>
+
       <div id="logo" class="pull-left">
         <h1><a href="{{ url_for('index') }}"><span>V</span>-Repository</a></h1>
       </div>
@@ -68,12 +84,10 @@
                                   placeholder = 'Email',
                                   autocomplete = 'off',
                                   autofocus = true) }}
-
-                                  <ul>
                                       {% for error in form.email.errors %}
-                                          <li>{{ error }}</li>
+                                          <h6 class="text-danger">{{ error }}</h6>
                                       {% endfor %}
-                                  </ul>
+                        
                             </div>
                             <div class="form-group">
                                 {{ form.username(class = 'form-control', 
@@ -81,31 +95,28 @@
                                   autocomplete = 'off',
                                   autofocus = true) }}
 
-                                  <ul>
                                       {% for error in form.username.errors %}
-                                          <li>{{ error }}</li>
+                                          <h6 class="text-danger">{{ error }}</h6>
                                       {% endfor %}
-                                  </ul>
+                            
                             </div>
                             <div class="form-group">
                                 {{ form.password(class = 'form-control', 
                                     placeholder = 'Password') }}
 
-                                    <ul>
                                         {% for error in form.password.errors %}
-                                            <li>{{ error }}</li>
+                                            <h6 class="text-danger">{{ error }}</h6>
                                         {% endfor %}
-                                    </ul>
+                                 
                             </div>
                             <div class="form-group">
                                 {{ form.confirm_password(class = 'form-control', 
                                     placeholder = 'Confirm Password') }}
 
-                                    <ul>
                                         {% for error in form.confirm_password.errors %}
-                                            <li>{{ error }}</li>
+                                            <h6 class="text-danger">{{ error }}</h6>
                                         {% endfor %}
-                                    </ul>
+                                
                             </div>
 
                             <div class="form-group">
@@ -113,9 +124,9 @@
                             </div>
 
                              
-
-                             {{ form.csrf_token }}
-
+                            <div class="form-group" style="display: none;">
+                                {{ form.csrf_token }}
+                            </div>
 
                             <h4 id="line" class="p-4" style="color: black;">Already registered?<a href="{{ url_for('login') }}"> Login</a></h4>
                         </form>
